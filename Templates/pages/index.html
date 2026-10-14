@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Identity | Django</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+        /* ==============================
+           01. GLOBAL STYLES
+        ============================== */
+
+        :root {
+            --dark: #0b1020;
+            --purple: #a78bfa;
+            --pink: #f9a8d4;
+            --mint: #86efac;
+            --peach: #fdba74;
+            --light: #faf9ff;
+            --text: #24243a;
+            --muted: #85859a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* ==============================
+           02. ANIMATED BACKGROUND
+        ============================== */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.35;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .orb-one {
+            width: 450px;
+            height: 450px;
+            background: #7c3aed;
+            top: -150px;
+            left: -120px;
+        }
+
+        .orb-two {
+            width: 400px;
+            height: 400px;
+            background: #db2777;
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        .orb-three {
+            width: 300px;
+            height: 300px;
+            background: #0891b2;
+            top: 40%;
+            right: 30%;
+            animation-delay: -8s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(35px, -35px);
+            }
+        }
+
+        /* ==============================
+           03. PAGE CONTAINER
+        ============================== */
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1180px;
+            margin: auto;
+            padding: 35px 25px 55px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 45px;
+            gap: 15px;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--purple);
+        }
+
+        .top-label {
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #a5a7bd;
+        }
+
+        /* ==============================
+           04. MAIN PROFILE CARD
+        ============================== */
+
+        .profile-card {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            background: var(--light);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.35);
+            animation: appear 1s ease both;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==============================
+           05. LEFT PANEL
+        ============================== */
+
+        .left-panel {
+            position: relative;
+            min-height: 650px;
+            padding: 40px;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 30% 35%,
+                    #5141a0 0%,
+                    transparent 45%
+                ),
+                linear-gradient(
+                    145deg,
+                    #27224d,
+                    #15192e 70%
+                );
+        }
+
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background-image:
+                radial-gradient(
+                    rgba(255,255,255,0.12) 1px,
+                    transparent 1px
+                );
+
+            background-size: 24px 24px;
+            opacity: 0.25;
+        }
+
+        .panel-top {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mini-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: #c7c4eb;
+        }
+
+        .status {
+            padding: 9px 15px;
+            border: 1px solid rgba(134,239,172,0.3);
+            border-radius: 30px;
+            font-size: 11px;
+            color: var(--mint);
+            background: rgba(134,239,172,0.08);
+            white-space: nowrap;
+        }
+
+        .status::before {
+            content: "";
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--mint);
+            margin-right: 7px;
+            box-shadow: 0 0 12px var(--mint);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* ==============================
+           06. ANIME AVATAR & ORBIT
+        ============================== */
+
+        .avatar-area {
+            position: relative;
+            height: 365px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .orbit-one,
+        .orbit-two {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.13);
+        }
+
+        .orbit-one {
+            width: 310px;
+            height: 310px;
+        }
+
+        .orbit-two {
+            width: 365px;
+            height: 365px;
+            border-style: dashed;
+            animation: rotate 35s linear infinite;
+        }
+
+        @keyframes rotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ANIME AVATAR CONTAINER */
+
+        .avatar {
+            position: relative;
+            z-index: 2;
+
+            width: 205px;
+            height: 205px;
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: linear-gradient(
+                135deg,
+                #b89cff,
+                #f5a9cf 65%,
+                #ffcda2
+            );
+
+            box-shadow:
+                0 0 0 12px rgba(255,255,255,0.04),
+                0 20px 70px rgba(167,139,250,0.4),
+                0 0 45px rgba(249,168,212,0.25);
+
+            animation: avatarFloat 5s ease-in-out infinite;
+        }
+
+        /* ANIME IMAGE */
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+            object-position: center;
+
+            display: block;
+            border-radius: 50%;
+
+            transition: transform 0.5s ease;
+        }
+
+        .avatar:hover .avatar-image {
+            transform: scale(1.12);
+        }
+
+        @keyframes avatarFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        /* FLOATING TAGS */
+
+        .floating-tag {
+            position: absolute;
+            z-index: 3;
+
+            padding: 11px 17px;
+            border-radius: 12px;
+
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(15px);
+
+            font-size: 11px;
+            font-weight: 600;
+
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .tag-one {
+            top: 80px;
+            left: 0;
+            transform: rotate(-8deg);
+        }
+
+        .tag-two {
+            bottom: 65px;
+            right: 0;
+            transform: rotate(8deg);
+            color: var(--mint);
+        }
+
+        /* ==============================
+           07. LEFT PANEL TEXT
+        ============================== */
+
+        .left-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .left-content h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 39px;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1.5px;
+            margin-bottom: 18px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(
+                90deg,
+                var(--purple),
+                var(--pink),
+                var(--peach)
+            );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .left-content p {
+            font-size: 13px;
+            line-height: 1.9;
+            color: #b7b5d1;
+            max-width: 310px;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 25px;
+        }
+
+        .tech-tags span {
+            padding: 8px 13px;
+            border-radius: 7px;
+            background: rgba(255,255,255,0.07);
+            color: #ddd8fa;
+            font-size: 10px;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* ==============================
+           08. RIGHT PANEL
+        ============================== */
+
+        .right-panel {
+            min-width: 0;
+            padding: 48px 48px 38px;
+            color: var(--text);
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #8b6fd6;
+            margin-bottom: 15px;
+        }
+
+        .right-panel h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(32px, 4vw, 49px);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            overflow-wrap: anywhere;
+        }
+
+        .right-panel h1 span {
+            color: #a78bfa;
+        }
+
+        .subtitle {
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e7e5ef;
+            margin: 32px 0;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+
+        .section-title h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .section-title span {
+            font-size: 11px;
+            color: #a5a3b8;
+        }
+
+        /* ==============================
+           09. INFORMATION CARDS
+        ============================== */
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .info-box {
+            position: relative;
+            min-width: 0;
+            padding: 23px 20px;
+
+            border-radius: 16px;
+            background: white;
+            border: 1px solid #eae8f1;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+        }
+
+        .info-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(89,70,140,0.09);
+            border-color: #d8c9ff;
+        }
+
+        .info-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: #a78bfa;
+            margin-bottom: 18px;
+        }
+
+        .info-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #9290a4;
+            margin-bottom: 9px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .info-box:nth-child(2) .info-number {
+            color: #e889b1;
+        }
+
+        .info-box:nth-child(3) .info-number {
+            color: #5bbd94;
+        }
+
+        .info-box:nth-child(4) .info-number {
+            color: #e9a35d;
+        }
+
+        /* ==============================
+           10. BIRTHDAY CARD
+        ============================== */
+
+        .birthday-card {
+            margin-top: 15px;
+            padding: 24px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+
+            border-radius: 16px;
+
+            background: linear-gradient(
+                110deg,
+                #ede8ff,
+                #fff0f6
+            );
+
+            border: 1px solid #e8dfff;
+        }
+
+        .birthday-card h4 {
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: #8d7da8;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .birthday-card p {
+            font-size: 16px;
+            font-weight: 800;
+            color: #55458e;
+        }
+
+        .birthday-card small {
+            display: block;
+            margin-top: 5px;
+            color: #9588ae;
+            font-size: 11px;
+        }
+
+        .birthday-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            animation: avatarFloat 4s ease-in-out infinite;
+        }
+
+        /* ==============================
+           11. FOOTER
+        ============================== */
+
+        .profile-footer {
+            margin-top: 30px;
+            padding-top: 22px;
+            border-top: 1px solid #e7e5ef;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-text {
+            color: #a09eb2;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        .footer-badge {
+            background: #e9e4fc;
+            color: #8068c9;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .bottom-credit {
+            text-align: center;
+            margin-top: 30px;
+            color: #9292ad;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+        }
+
+        .bottom-credit span {
+            color: var(--pink);
+        }
+
+        /* ==============================
+           12. RESPONSIVE DESIGN
+        ============================== */
+
+        @media (max-width: 900px) {
+
+            .profile-card {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel {
+                min-height: 590px;
+            }
+
+            .right-panel {
+                padding: 35px;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .container {
+                padding: 20px 13px 35px;
+            }
+
+            .topbar {
+                margin-bottom: 25px;
+            }
+
+            .top-label {
+                font-size: 8px;
+                letter-spacing: 1px;
+            }
+
+            .profile-card {
+                border-radius: 22px;
+            }
+
+            .left-panel {
+                padding: 25px;
+                min-height: 540px;
+            }
+
+            .mini-label {
+                font-size: 8px;
+                letter-spacing: 1px;
+            }
+
+            .status {
+                padding: 8px 10px;
+                font-size: 9px;
+            }
+
+            .avatar-area {
+                height: 310px;
+            }
+
+            .orbit-one {
+                width: 235px;
+                height: 235px;
+            }
+
+            .orbit-two {
+                width: 280px;
+                height: 280px;
+            }
+
+            .avatar {
+                width: 170px;
+                height: 170px;
+            }
+
+            .floating-tag {
+                font-size: 9px;
+                padding: 9px 11px;
+            }
+
+            .tag-one {
+                top: 55px;
+            }
+
+            .tag-two {
+                bottom: 45px;
+            }
+
+            .left-content h2 {
+                font-size: 32px;
+            }
+
+            .right-panel {
+                padding: 30px 22px;
+            }
+
+            .right-panel h1 {
+                font-size: 34px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-box {
+                padding: 20px;
+            }
+
+            .birthday-card {
+                padding: 18px;
+            }
+
+            .profile-footer {
+                flex-wrap: wrap;
+            }
+
+        }
+
+        /* ==============================
+           13. ACCESSIBILITY
+        ============================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ANIMATED BACKGROUND -->
+
+    <div class="background" aria-hidden="true">
+        <div class="orb orb-one"></div>
+        <div class="orb orb-two"></div>
+        <div class="orb orb-three"></div>
+    </div>
+
+
+    <div class="container">
+
+        <!-- TOP NAVIGATION -->
+
+        <header class="topbar">
+
+            <div class="logo">
+                student<span>.</span>identity
+            </div>
+
+            <div class="top-label">
+                Django / Personal Profile
+            </div>
+
+        </header>
+
+
+        <!-- MAIN PROFILE CARD -->
+
+        <main class="profile-card">
+
+
+            <!-- LEFT PANEL -->
+
+            <section class="left-panel">
+
+                <div class="panel-top">
+
+                    <span class="mini-label">
+                        DIGITAL IDENTITY / 001
+                    </span>
+
+                    <span class="status">
+                        Active Student
+                    </span>
+
+                </div>
+
+
+                <!-- ANIME AVATAR -->
+
+                <div class="avatar-area">
+
+                    <div class="orbit-one"></div>
+                    <div class="orbit-two"></div>
+
+                    <div class="avatar">
+
+                        <img
+                            src="{% static 'pages/avatar.png' %}"
+                            alt="Mayar's Anime Avatar"
+                            class="avatar-image"
+                        >
+
+                    </div>
+
+                    <div class="floating-tag tag-one">
+                        ✦ Creative Mind
+                    </div>
+
+                    <div class="floating-tag tag-two">
+                        &lt;/&gt; Future Developer
+                    </div>
+
+                </div>
+
+
+                <!-- INTRODUCTION -->
+
+                <div class="left-content">
+
+                    <h2>
+                        More than<br>
+                        just a <span class="gradient-text">student.</span>
+                    </h2>
+
+                    <p>
+                        Learning, creating, and turning ideas
+                        into meaningful digital experiences.
+                        One line of code at a time.
+                    </p>
+
+                    <div class="tech-tags">
+                        <span>PYTHON</span>
+                        <span>DJANGO</span>
+                        <span>WEB DEVELOPMENT</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- RIGHT PANEL -->
+
+            <section class="right-panel">
+
+                <span class="eyebrow">
+                    ✦ THE PERSON BEHIND THE CODE
+                </span>
+
+                <h1>
+                    Hello, I'm<br>
+
+                    <span>
+                        {{ first_name|capfirst|add:" "|add:last_name }}
+                    </span>
+                </h1>
+
+                <p class="subtitle">
+                    Welcome to my personal space on the web.
+                    Here's a little more about who I am.
+                </p>
+
+
+                <div class="divider"></div>
+
+
+                <!-- SECTION TITLE -->
+
+                <div class="section-title">
+
+                    <h3>Personal Information</h3>
+
+                    <span>01 — 05</span>
+
+                </div>
+
+
+                <!-- PERSONAL INFORMATION GRID -->
+
+                <div class="info-grid">
+
+
+                    <!-- FULL NAME -->
+
+                    <div class="info-box">
+
+                        <div class="info-number">01 /</div>
+
+                        <div class="info-label">
+                            Full Name
+                        </div>
+
+                        <div class="info-value">
+                            {{ first_name|capfirst|add:" "|add:last_name }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- STUDENT ID -->
+
+                    <div class="info-box">
+
+                        <div class="info-number">02 /</div>
+
+                        <div class="info-label">
+                            Student ID
+                        </div>
+
+                        <div class="info-value">
+                            {{ student_id|stringformat:"s" }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- ADDRESS -->
+
+                    <div class="info-box">
+
+                        <div class="info-number">03 /</div>
+
+                        <div class="info-label">
+                            Location
+                        </div>
+
+                        <div class="info-value">
+                            {{ address|upper }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="info-box">
+
+                        <div class="info-number">04 /</div>
+
+                        <div class="info-label">
+                            Email Address
+                        </div>
+
+                        <div class="info-value">
+                            {{ email|default:"Not Provided" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DATE OF BIRTH -->
+
+                <div class="birthday-card">
+
+                    <div>
+
+                        <h4>05 / Time Since Birth</h4>
+
+                        <p>
+                            {{ date_of_birth|timesince }} ago
+                        </p>
+
+                        <small>
+                            Born on {{ date_of_birth|date:"d M Y" }}
+                        </small>
+
+                    </div>
+
+                    <div class="birthday-icon" aria-hidden="true">
+                        
+                    </div>
+
+                </div>
+
+
+                <!-- PROFILE FOOTER -->
+
+                <footer class="profile-footer">
+
+                    <div class="footer-text">
+                        BUILT WITH DJANGO & CURIOSITY
+                    </div>
+
+                    <div class="footer-badge">
+                        STUDENT PROFILE
+                    </div>
+
+                </footer>
+
+            </section>
+
+        </main>
+
+
+        <!-- BOTTOM CREDIT -->
+
+        <div class="bottom-credit">
+            DESIGNED WITH <span>♥</span> & POWERED BY DJANGO
+        </div>
+
+    </div>
+
+</body>
+</html>
