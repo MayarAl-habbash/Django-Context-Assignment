@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from datetime import date
-
+from .models import Student
 def index(request):
 
     context = {
@@ -13,3 +13,6 @@ def index(request):
     }
 
     return render(request, 'pages/index.html', context)
+
+def homepage(request):
+    return render(request, 'pages/homepage.html',{'student': Student.objects.first()})

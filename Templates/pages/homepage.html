@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Identity | Home Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --dark: #0b1020;
+            --purple: #a78bfa;
+            --pink: #f9a8d4;
+            --light: #faf9ff;
+            --text: #24243a;
+            --muted: #85859a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'DM Sans', Arial, sans-serif;
+            color: white;
+            background:
+                radial-gradient(circle at 0% 10%, rgba(124,58,237,.30), transparent 35%),
+                radial-gradient(circle at 100% 100%, rgba(219,39,119,.23), transparent 35%),
+                var(--dark);
+        }
+        .container { max-width: 1180px; margin: auto; padding: 35px 25px 30px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 42px; }
+        .logo { font: 800 23px 'Outfit', sans-serif; letter-spacing: -1px; }
+        .logo span { color: var(--purple); }
+        .top-label { color: #a5a7bd; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; }
+
+        .profile-card {
+            display: grid;
+            grid-template-columns: .9fr 1.1fr;
+            overflow: hidden;
+            background: var(--light);
+            border-radius: 30px;
+            box-shadow: 0 30px 100px rgba(0,0,0,.3);
+        }
+        .left-panel {
+            position: relative;
+            min-width: 0;
+            padding: 40px;
+            background:
+                radial-gradient(circle at 30% 35%, #5141a0, transparent 48%),
+                linear-gradient(145deg, #27224d, #15192e 75%);
+        }
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: .22;
+            background-image: radial-gradient(rgba(255,255,255,.2) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .mini-label, .left-content, .avatar-area { position: relative; z-index: 1; }
+        .mini-label { color: #c7c4eb; font-size: 10px; letter-spacing: 3px; }
+        .avatar-area { height: 365px; display: grid; place-items: center; }
+        .orbit {
+            position: absolute;
+            width: 310px;
+            height: 310px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 50%;
+        }
+        .orbit.outer { width: 365px; height: 365px; border-style: dashed; }
+        .avatar {
+            position: relative;
+            z-index: 2;
+            width: 205px;
+            height: 205px;
+            padding: 7px;
+            overflow: hidden;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b89cff, #f5a9cf 70%, #ffcda2);
+            box-shadow: 0 0 0 12px rgba(255,255,255,.04), 0 18px 60px rgba(167,139,250,.4);
+        }
+        .avatar img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .photo-placeholder { display: grid; place-items: center; height: 100%; border-radius: 50%; background: #272243; font-size: 60px; }
+        .floating-tag {
+            position: absolute;
+            z-index: 3;
+            padding: 11px 17px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 12px;
+            background: rgba(255,255,255,.13);
+            box-shadow: 0 15px 35px rgba(0,0,0,.15);
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .tag-one { top: 82px; left: 0; transform: rotate(-8deg); }
+        .tag-two { bottom: 65px; right: 0; transform: rotate(8deg); color: #86efac; }
+        .left-content h2 { font: 700 39px/1.15 'Outfit', sans-serif; letter-spacing: -1.5px; margin-bottom: 18px; }
+        .gradient-text {
+            background: linear-gradient(90deg, var(--purple), var(--pink), #fdba74);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .left-content p { max-width: 310px; color: #b7b5d1; font-size: 13px; line-height: 1.9; }
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
+        .tech-tags span {
+            padding: 8px 13px;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 7px;
+            background: rgba(255,255,255,.07);
+            color: #ddd8fa;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        .right-panel { min-width: 0; padding: 48px 48px 38px; color: var(--text); }
+        .eyebrow { display: block; color: #8b6fd6; font-size: 11px; font-weight: 700; letter-spacing: 3px; margin-bottom: 15px; }
+        .right-panel h1 { font: 800 clamp(32px,4vw,49px)/1.1 'Outfit', sans-serif; letter-spacing: -2px; overflow-wrap: anywhere; }
+        .right-panel h1 span { color: var(--purple); }
+        .subtitle { margin-top: 15px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+        .divider { height: 1px; background: #e7e5ef; margin: 32px 0; }
+        .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-title h3 { font: 700 17px 'Outfit', sans-serif; }
+        .section-title span { color: #a5a3b8; font-size: 11px; }
+        .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 15px; }
+        .info-box {
+            min-width: 0;
+            padding: 23px 20px;
+            background: white;
+            border: 1px solid #eae8f1;
+            border-radius: 16px;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .info-box:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(89,70,140,.08); }
+        .info-number { margin-bottom: 18px; color: var(--purple); font: 700 11px 'Outfit', sans-serif; }
+        .info-box:nth-child(2) .info-number { color: #e889b1; }
+        .info-box:nth-child(3) .info-number { color: #5bbd94; }
+        .info-box:nth-child(4) .info-number { color: #e9a35d; }
+        .info-label { margin-bottom: 9px; color: #9290a4; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .info-value { font-size: 15px; font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; }
+        .birthday-card {
+            margin-top: 15px;
+            padding: 24px;
+            border: 1px solid #e8dfff;
+            border-radius: 16px;
+            background: linear-gradient(110deg, #ede8ff, #fff0f6);
+        }
+        .birthday-card h4 { margin-bottom: 9px; color: #8d7da8; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .birthday-card p { color: #55458e; font-size: 16px; font-weight: 800; }
+        .birthday-card small { display: block; margin-top: 5px; color: #9588ae; font-size: 11px; }
+        .profile-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 30px; padding-top: 22px; border-top: 1px solid #e7e5ef; }
+        .footer-text { color: #a09eb2; font-size: 10px; letter-spacing: 1px; }
+        .footer-badge { padding: 8px 12px; background: #e9e4fc; color: #8068c9; border-radius: 6px; font-size: 10px; font-weight: 700; }
+        .bottom-credit { margin-top: 30px; text-align: center; color: #9292ad; font-size: 11px; letter-spacing: 1.5px; }
+        .bottom-credit span { color: var(--pink); }
+        .empty-state { padding: 55px; text-align: center; color: #c9bddf; }
+
+        @media (max-width: 900px) {
+            .profile-card { grid-template-columns: 1fr; }
+            .left-panel { padding: 35px; }
+            .right-panel { padding: 38px 35px; }
+        }
+        @media (max-width: 500px) {
+            .container { padding: 20px 13px 30px; }
+            .topbar { margin-bottom: 25px; }
+            .top-label { font-size: 8px; letter-spacing: 1px; }
+            .profile-card { border-radius: 22px; }
+            .left-panel { padding: 25px; }
+            .avatar-area { height: 310px; }
+            .orbit { width: 235px; height: 235px; }
+            .orbit.outer { width: 280px; height: 280px; }
+            .avatar { width: 170px; height: 170px; }
+            .floating-tag { font-size: 9px; padding: 9px 11px; }
+            .tag-one { top: 55px; }
+            .tag-two { bottom: 45px; }
+            .right-panel { padding: 30px 22px; }
+            .right-panel h1 { font-size: 34px; }
+            .info-grid { grid-template-columns: 1fr; }
+            .profile-footer { flex-wrap: wrap; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="topbar">
+            <div class="logo">student<span>.</span>identity</div>
+            <div class="top-label">DJANGO / PERSONAL PROFILE</div>
+        </header>
+
+        {% if student %}
+        <main class="profile-card">
+            <section class="left-panel">
+                <div class="mini-label">DIGITAL IDENTITY / 001</div>
+
+                <div class="avatar-area">
+                    <div class="orbit"></div>
+                    <div class="orbit outer"></div>
+
+                    <div class="avatar">
+                        {% if student.photo %}
+                            <img src="{{ student.photo.url }}" alt="Photo of {{ student.std_name }}">
+                        {% else %}
+                            <div class="photo-placeholder" aria-label="No photo uploaded">♡</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="floating-tag tag-one">✦ Creative Mind</div>
+                    <div class="floating-tag tag-two">&lt;/&gt; Future Developer</div>
+                </div>
+
+                <div class="left-content">
+                    <h2>Web<br><span class="gradient-text">Computing</span></h2>
+                    <p>Learning, creating, and turning ideas into meaningful digital experiences. One line of code at a time.</p>
+                    <div class="tech-tags">
+                        <span>PYTHON</span>
+                        <span>DJANGO</span>
+                        <span>WEB DEVELOPMENT</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="right-panel">
+                <span class="eyebrow">✦ THE PERSON BEHIND THE CODE</span>
+                <h1>Hello, I'm<br><span>{{ student.std_name }}</span></h1>
+                <p class="subtitle">Welcome to my personal space on the web. Here's a little more about who I am.</p>
+                <div class="divider"></div>
+
+                <div class="section-title">
+                    <h3>Personal Information</h3>
+                    <span>01 — 06</span>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-box">
+                        <div class="info-number">01 /</div>
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">{{ student.std_name }}</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-number">02 /</div>
+                        <div class="info-label">University ID</div>
+                        <div class="info-value">{{ student.std_id }}</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-number">03 /</div>
+                        <div class="info-label">Address</div>
+                        <div class="info-value">{{ student.get_address_display }}</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-number">04 /</div>
+                        <div class="info-label">Salary</div>
+                        <div class="info-value">{{ student.salary|floatformat:2 }}</div>
+                    </div>
+                </div>
+
+                <div class="birthday-card">
+                    <h4>05 — 06 / Age &amp; Date of Birth</h4>
+                    <p>{{ student.age }} years old</p>
+                    <small>Born on {{ student.date_of_birth|date:"d M Y" }}</small>
+                </div>
+
+                <footer class="profile-footer">
+                    <div class="footer-text">BUILT WITH DJANGO &amp; CURIOSITY</div>
+                    <div class="footer-badge">STUDENT PROFILE</div>
+                </footer>
+            </section>
+        </main>
+        {% else %}
+            <p class="empty-state">No student data available yet.</p>
+        {% endif %}
+
+        <div class="bottom-credit">DESIGNED WITH <span>♥</span> &amp; POWERED BY DJANGO</div>
+    </div>
+</body>
+</html>
