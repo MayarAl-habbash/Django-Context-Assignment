@@ -2,7 +2,7 @@ from django.db import models
 
 class Student(models.Model):
     addresses = [
-        ('Khan Younis', 'KhanYounis'),
+        ('KhanYounis', 'Khan Younis'),
         ('Gaza', 'Gaza'),
         ('Rafah', 'Rafah'),
         ('DeirBalah', 'DeirBalah'),
